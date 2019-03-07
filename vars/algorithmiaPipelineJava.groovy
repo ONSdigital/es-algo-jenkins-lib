@@ -10,7 +10,7 @@ def call(body) {
     algorithmiaRepo = pipelineParams.algorithmiaRepo
 
     def buildInfo = Artifactory.newBuildInfo()
-    def agentSbtVersion = 'sbt_1-2-4'
+    def agentMavenVersion = 'maven_3.5.4'
 
     pipeline {
         libraries {
@@ -43,10 +43,10 @@ def call(body) {
             }
 
             stage('Build') {
-                agent { label "build.${agentSbtVersion}" }
+                agent { label "build.${agentMavenVersion}" }
                 steps {
                     unstash name: 'Checkout'
-                    sh "sbt compile"
+                    sh "mvn compile"
                 }
                 post {
                     success {
@@ -59,17 +59,17 @@ def call(body) {
             }
 
             stage('Validate') {
-                agent { label "build.${agentSbtVersion}" }
+                agent { label "build.${agentMavenVersion}" }
                 steps {
                     unstash name: 'Checkout'
-                    sh 'sbt coverage test coverageReport'
+                    sh 'mvn cobertura:cobertura'
                 }
                 post {
                     always {
                         junit '**/target/test-reports/*.xml'
                         cobertura autoUpdateHealth: false,
                                 autoUpdateStability: false,
-                                coberturaReportFile: 'target/**/coverage-report/cobertura.xml',
+                                coberturaReportFile: 'target/site/coverage/cobertura.xml',
                                 conditionalCoverageTargets: '70, 0, 0',
                                 failUnhealthy: false,
                                 failUnstable: false,

@@ -1,0 +1,13 @@
+<strong>
+algorithmiaPipelineJava {
+    githubRepo = "es-helloworld"
+    algorithmiaRepo = "helloworld"
+}
+</strong>
+
+<p>
+    This method will run an entire Alorithmia build and deploy pipeline for the given algorithm
+
+    Params:
+        gitHubRepo - The name of the algorithm (as in the GitHub repository)
+</p>
