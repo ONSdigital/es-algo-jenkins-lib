@@ -6,7 +6,8 @@ def call(body) {
     body.delegate = pipelineParams
     body()
 
-    algorithmName = pipelineParams.githubRepo
+    githubRepo = pipelineParams.githubRepo
+    algorithmiaRepo = pipelineParams.algorithmiaRepo
 
     def buildInfo = Artifactory.newBuildInfo()
     def agentSbtVersion = 'sbt_0-13-13'
