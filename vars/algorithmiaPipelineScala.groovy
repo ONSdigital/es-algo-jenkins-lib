@@ -6,7 +6,7 @@ def call(body) {
     body.delegate = pipelineParams
     body()
 
-    algorithmName = pipelineParams.algorithmName
+    algorithmName = pipelineParams.githubRepo
 
     def buildInfo = Artifactory.newBuildInfo()
     def agentSbtVersion = 'sbt_0-13-13'
@@ -16,8 +16,8 @@ def call(body) {
             lib('jenkins-pipeline-shared')
         }
         environment {
-            ALGORITHM_NAME = "${algorithmName}"
-            TRAVIC_CI_URL = "https://travis-ci.com/ONSdigital/${algorithmName}"
+            GITHUB_REPO = "${githubRepo}"
+            TRAVIC_CI_URL = "https://travis-ci.com/ONSdigital/${githubRepo}"
         }
         options {
             skipDefaultCheckout()
@@ -32,7 +32,7 @@ def call(body) {
                 steps {
                     checkout scm
                     script {
-                        buildInfo.name = "${ALGORITHM_NAME}"
+                        buildInfo.name = "${GITHUB_REPO}"
                         buildInfo.number = "${BUILD_NUMBER}"
                         buildInfo.env.collect()
                     }
