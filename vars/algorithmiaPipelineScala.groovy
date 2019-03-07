@@ -10,7 +10,7 @@ def call(body) {
     algorithmiaRepo = pipelineParams.algorithmiaRepo
 
     def buildInfo = Artifactory.newBuildInfo()
-    def agentSbtVersion = 'sbt_0-13-13'
+    def agentSbtVersion = 'sbt_1-2-4'
 
     pipeline {
         libraries {
