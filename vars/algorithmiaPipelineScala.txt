@@ -1,0 +1,12 @@
+<strong>
+algorithmiaPipelinScala {
+    algorithmName = "es-helloworld"
+}
+</strong>
+
+<p>
+    This method will run an entire Alorithmia build and deploy pipeline for the given algorithm
+
+    Params:
+        algorithmName - The name of the algorithm (as in GitHub)
+</p>
