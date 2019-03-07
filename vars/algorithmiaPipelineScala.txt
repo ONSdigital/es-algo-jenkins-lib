@@ -8,5 +8,5 @@ algorithmiaPipelinScala {
     This method will run an entire Alorithmia build and deploy pipeline for the given algorithm
 
     Params:
-        algorithmName - The name of the algorithm (as in GitHub)
+        gitHubRepo - The name of the algorithm (as in the GitHub repository)
 </p>
