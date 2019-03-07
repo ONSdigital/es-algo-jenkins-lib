@@ -1,6 +1,7 @@
 <strong>
 algorithmiaPipelinScala {
-    algorithmName = "es-helloworld"
+    githubRepo = "es-helloworld"
+    algorithmiaRepo = "helloworld"
 }
 </strong>
 
