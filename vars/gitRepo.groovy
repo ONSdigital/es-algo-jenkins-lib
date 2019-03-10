@@ -2,7 +2,7 @@
 
 def name() {
     url = build.environment.get("GIT_URL")
-    substring(0, url.lastIndexOf("/")).replaceAll('.git', '')
+    url.substring(0, url.lastIndexOf("/")).replaceAll('.git', '')
 }
 
 def url() {
