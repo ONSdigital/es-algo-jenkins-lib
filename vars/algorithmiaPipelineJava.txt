@@ -1,6 +1,5 @@
 <strong>
 algorithmiaPipelineJava {
-    githubRepo = "es-helloworld"
     algorithmiaRepo = "helloworld"
 }
 </strong>

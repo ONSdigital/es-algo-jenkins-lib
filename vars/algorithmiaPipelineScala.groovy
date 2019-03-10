@@ -6,7 +6,6 @@ def call(body) {
     body.delegate = pipelineParams
     body()
 
-    githubRepo = pipelineParams.githubRepo
     algorithmiaRepo = pipelineParams.algorithmiaRepo
 
     def buildInfo = Artifactory.newBuildInfo()
@@ -17,8 +16,8 @@ def call(body) {
             lib('jenkins-pipeline-shared')
         }
         environment {
-            GITHUB_REPO = "${githubRepo}"
-            TRAVIS_CI_URL = "https://travis-ci.com/ONSdigital/${githubRepo}"
+            GIT_REPO = gitRepo.name
+            TRAVIS_CI_URL = "https://travis-ci.com/ONSdigital/${GIT_REPO}"
         }
         options {
             skipDefaultCheckout()
@@ -33,7 +32,7 @@ def call(body) {
                 steps {
                     checkout scm
                     script {
-                        buildInfo.name = "${GITHUB_REPO}"
+                        buildInfo.name = "${GIT_REPO}"
                         buildInfo.number = "${BUILD_NUMBER}"
                         buildInfo.env.collect()
                     }
