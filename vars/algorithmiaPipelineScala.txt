@@ -1,6 +1,5 @@
 <strong>
 algorithmiaPipelineScala {
-    githubRepo = "es-helloworld"
     algorithmiaRepo = "helloworld"
 }
 </strong>
