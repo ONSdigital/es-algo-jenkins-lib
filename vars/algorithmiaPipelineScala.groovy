@@ -94,7 +94,7 @@ def call(body) {
                     beforeAgent true
                 }
                 steps {
-                    colourText("info", "Currently deployed to Algorthmia via ${env.TRAVIS_CI_URL}{$buildInfo.name}")
+                    colourText("info", "Currently deployed to Algorthmia via ${env.TRAVIS_CI_URL}${buildInfo.name}")
                 }
                 post {
                     success {
@@ -114,7 +114,7 @@ def call(body) {
                     beforeAgent true
                 }
                 steps {
-                    colourText("info", "Currently verfied in Algorthmia via ${env.TRAVIS_CI_URL}{$buildInfo.name}")
+                    colourText("info", "Currently verfied in Algorthmia via ${env.TRAVIS_CI_URL}${buildInfo.name}")
                 }
                 post {
                     success {
