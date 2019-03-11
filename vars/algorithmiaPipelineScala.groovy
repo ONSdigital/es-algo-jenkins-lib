@@ -16,8 +16,7 @@ def call(body) {
             lib('jenkins-pipeline-shared')
         }
         environment {
-            GIT_REPO = gitRepo.name
-            TRAVIS_CI_URL = "https://travis-ci.com/ONSdigital/${GIT_REPO}"
+            TRAVIS_CI_URL = "https://travis-ci.com/ONSdigital/"
         }
         options {
             skipDefaultCheckout()
@@ -32,7 +31,7 @@ def call(body) {
                 steps {
                     checkout scm
                     script {
-                        buildInfo.name = "${GIT_REPO}"
+                        buildInfo.name = gitRepo.name(scm.getUserRemoteConfigs()[0].getUrl())
                         buildInfo.number = "${BUILD_NUMBER}"
                         buildInfo.env.collect()
                     }
@@ -95,7 +94,7 @@ def call(body) {
                     beforeAgent true
                 }
                 steps {
-                    colourText("info", "Currently deployed to Algorthmia via ${env.TRAVIS_CI_URL}")
+                    colourText("info", "Currently deployed to Algorthmia via ${env.TRAVIS_CI_URL}{$buildInfo.name}")
                 }
                 post {
                     success {
@@ -115,7 +114,7 @@ def call(body) {
                     beforeAgent true
                 }
                 steps {
-                    colourText("info", "Currently verfied in Algorthmia via ${env.TRAVIS_CI_URL}")
+                    colourText("info", "Currently verfied in Algorthmia via ${env.TRAVIS_CI_URL}{$buildInfo.name}")
                 }
                 post {
                     success {
@@ -153,3 +152,7 @@ def call(body) {
         }
     }
 }
+
+
+
+
