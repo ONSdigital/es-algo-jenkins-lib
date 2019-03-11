@@ -1,10 +1,5 @@
 #!/usr/bin/env groovy
 
-def name() {
-    url = build.environment.get("GIT_URL")
-    url.substring(0, url.lastIndexOf("/")).replaceAll('.git', '')
-}
-
-def url() {
-    build.environment.get("GIT_URL")
+def name(url) {
+    url.substring(url.lastIndexOf("/")+1,url.lastIndexOf("."))
 }
