@@ -64,10 +64,10 @@ def call(body) {
                 }
                 post {
                     always {
-                        junit '**/target/test-reports/*.xml'
+                        junit '**/target/surefire-reports/*.xml'
                         cobertura autoUpdateHealth: false,
                                 autoUpdateStability: false,
-                                coberturaReportFile: 'target/site/coverage/cobertura.xml',
+                                coberturaReportFile: '**/target/site/cobertura/*.xml',
                                 conditionalCoverageTargets: '70, 0, 0',
                                 failUnhealthy: false,
                                 failUnstable: false,
