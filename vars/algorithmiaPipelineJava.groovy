@@ -87,6 +87,7 @@ def call(body) {
             }
 
             stage ('Analysis') {
+                agent { label "build.${agentMavenVersion}" }
                 steps {
                     sh 'mvn checkstyle:checkstyle pmd:pmd pmd:cpd findbugs:findbugs'
                 }
