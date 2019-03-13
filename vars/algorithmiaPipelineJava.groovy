@@ -86,6 +86,26 @@ def call(body) {
                 }
             }
 
+            stage ('Analysis') {
+                steps {
+                    sh 'mvn checkstyle:checkstyle pmd:pmd pmd:cpd findbugs:findbugs'
+                }
+                post {
+                    always {
+                        recordIssues enabledForFailure: true, tools: [mavenConsole(), java(), javaDoc()]
+                        recordIssues enabledForFailure: true, tool: checkStyle()
+                        recordIssues enabledForFailure: true, tool: cpd(pattern: '**/target/cpd.xml')
+                        recordIssues enabledForFailure: true, tool: pmdParser(pattern: '**/target/pmd.xml')
+                    }
+                    success {
+                        colourText("info", "Stage: ${env.STAGE_NAME} successful!")
+                    }
+                    failure {
+                        colourText("warn", "Stage: ${env.STAGE_NAME} failed!")
+                    }
+                }
+            }
+
             stage('Deploy') {
                 agent { label 'deploy.cf' }
                 when {
