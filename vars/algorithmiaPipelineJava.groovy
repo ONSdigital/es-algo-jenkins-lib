@@ -88,8 +88,8 @@ def call(body) {
 
             stage ('Analysis') {
                 agent { label "build.${agentMavenVersion}" }
-                unstash name: 'Checkout'
                 steps {
+                    unstash name: 'Checkout'
                     sh 'mvn checkstyle:checkstyle pmd:pmd pmd:cpd findbugs:findbugs'
                 }
                 post {
