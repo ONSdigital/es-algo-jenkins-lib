@@ -57,31 +57,57 @@ def call(body) {
             }
 
             stage('Validate') {
-                agent { label "build.${agentMavenVersion}" }
-                steps {
-                    unstash name: 'Checkout'
-                    sh 'mvn cobertura:cobertura'
-                }
-                post {
-                    always {
-                        junit '**/target/surefire-reports/*.xml'
-                        cobertura autoUpdateHealth: false,
-                                autoUpdateStability: false,
-                                coberturaReportFile: '**/target/site/cobertura/*.xml',
-                                conditionalCoverageTargets: '70, 0, 0',
-                                failUnhealthy: false,
-                                failUnstable: false,
-                                lineCoverageTargets: '80, 0, 0',
-                                maxNumberOfBuilds: 0,
-                                methodCoverageTargets: '80, 0, 0',
-                                onlyStable: false,
-                                zoomCoverageChart: false
+                parallel {
+                    stage('Unit Test') {
+                        agent { label "build.${agentMavenVersion}" }
+                        steps {
+                            unstash name: 'Checkout'
+                            sh 'mvn cobertura:cobertura'
+                        }
+                        post {
+                            always {
+                                junit '**/target/surefire-reports/*.xml'
+                                cobertura autoUpdateHealth: false,
+                                        autoUpdateStability: false,
+                                        coberturaReportFile: '**/target/site/cobertura/*.xml',
+                                        conditionalCoverageTargets: '70, 0, 0',
+                                        failUnhealthy: false,
+                                        failUnstable: false,
+                                        lineCoverageTargets: '80, 0, 0',
+                                        maxNumberOfBuilds: 0,
+                                        methodCoverageTargets: '80, 0, 0',
+                                        onlyStable: false,
+                                        zoomCoverageChart: false
+                            }
+                            success {
+                                colourText("info", "Stage: ${env.STAGE_NAME} successful!")
+                            }
+                            failure {
+                                colourText("warn", "Stage: ${env.STAGE_NAME} failed!")
+                            }
+                        }
                     }
-                    success {
-                        colourText("info", "Stage: ${env.STAGE_NAME} successful!")
-                    }
-                    failure {
-                        colourText("warn", "Stage: ${env.STAGE_NAME} failed!")
+
+                    stage('Static Analysis') {
+                        agent { label "build.${agentMavenVersion}" }
+                        steps {
+                            unstash name: 'Checkout'
+                            sh 'mvn checkstyle:checkstyle pmd:pmd pmd:cpd findbugs:findbugs'
+                        }
+                        post {
+                            always {
+                                recordIssues enabledForFailure: true, tools: [mavenConsole(), java(), javaDoc()]
+                                recordIssues enabledForFailure: true, tool: checkStyle()
+                                recordIssues enabledForFailure: true, tool: cpd(pattern: '**/target/cpd.xml')
+                                recordIssues enabledForFailure: true, tool: pmdParser(pattern: '**/target/pmd.xml')
+                            }
+                            success {
+                                colourText("info", "Stage: ${env.STAGE_NAME} successful!")
+                            }
+                            failure {
+                                colourText("warn", "Stage: ${env.STAGE_NAME} failed!")
+                            }
+                        }
                     }
                 }
             }
