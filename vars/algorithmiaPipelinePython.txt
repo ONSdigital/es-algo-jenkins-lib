@@ -1,5 +1,5 @@
 <strong>
-algorithmiaPipelineJava {
+algorithmiaPipelinePython {
     algorithmiaRepo = "helloworld"
 }
 </strong>
