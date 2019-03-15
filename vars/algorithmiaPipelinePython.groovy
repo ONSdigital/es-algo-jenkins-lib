@@ -93,6 +93,8 @@ def call(body) {
 											methodCoverageTargets: '80, 0, 0',
 											onlyStable: false,
 											zoomCoverageChart: false
+
+									stash includes: '**/test-reports/*.xml, **/coverage-report/*.xml', name: 'testresult-unittest'
 								}
 								success {
 									colourText("info", "Stage: ${env.STAGE_NAME} successful!")
@@ -110,13 +112,14 @@ def call(body) {
 								withCredentials([usernameColonPassword(credentialsId: 'af-py-pi-credentials', variable: 'USERPASS')]) {
 								sh'''
 									pip3.6 install pylint -i http://${USERPASS}@art-p-01/artifactory/api/pypi/yr-python/simple --trusted-host art-p-01
-									pylint src --exit-zero --msg-template='{path}:{module}:{line}: [{msg_id}({symbol}), {obj}] {msg}'
+									pylint src --exit-zero --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" | tee -a pylint-report.txt
 								 '''
 								}
 							}
 							post {
 								always {
 									recordIssues enabledForFailure: true, tool: pyLint()
+									stash includes: '**/pylint*.txt', name: 'pylint'
 								}
 								success {
 									colourText("info", "Stage: ${env.STAGE_NAME} successful!")
@@ -128,7 +131,28 @@ def call(body) {
 						}
             		}
 		}
-		
+
+        stage('SonarQube Analysis'){
+                agent { label "build.sonar-scanner_3-3-0" }
+                steps {
+                    unstash name: 'Checkout'
+                    unstash name: 'pylint'
+                    unstash name: 'testresult-unittest'
+
+                    sh'''
+                        sonar-scanner
+                    '''
+                }
+                post {
+                    success {
+                        colourText("info", "Stage: ${env.STAGE_NAME} successful!")
+                    }
+                    failure {
+                        colourText("warn", "Stage: ${env.STAGE_NAME} failed!")
+                    }
+                }
+            }
+
 		stage('Deploy') {
                 agent { label 'deploy.cf' }
                 when {
