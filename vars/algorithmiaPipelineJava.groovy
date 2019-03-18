@@ -151,6 +151,29 @@ def call(body) {
                     }
                 }
             }
+
+            stage('Publish') {
+                agent { label 'deploy.cf' }
+                when {
+                    allOf {
+                        branch "master"
+                        buildingTag()
+                        // evaluate the when condition before entering this stage's agent, if any
+                        beforeAgent true
+                    }
+                }
+                steps {
+                    colourText("info", "Currently verfied in Algorthmia via ${env.TRAVIS_CI_URL}${buildInfo.name}")
+                }
+                post {
+                    success {
+                        colourText("info", "Stage: ${env.STAGE_NAME} successful!")
+                    }
+                    failure {
+                        colourText("warn", "Stage: ${env.STAGE_NAME} failed!")
+                    }
+                }
+            }
         }
 
         post {
