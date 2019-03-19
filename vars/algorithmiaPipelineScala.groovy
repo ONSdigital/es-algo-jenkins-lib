@@ -132,9 +132,9 @@ def call(body) {
                     allOf {
                         branch "master"
                         buildingTag()
-                        // evaluate the when condition before entering this stage's agent, if any
-                        beforeAgent true
                     }
+                    // evaluate the when condition before entering this stage's agent, if any
+                    beforeAgent true
                 }
                 steps {
                     colourText("info", "Currently verfied in Algorthmia via ${env.TRAVIS_CI_URL}${buildInfo.name}")
