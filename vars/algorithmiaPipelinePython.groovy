@@ -139,9 +139,13 @@ def call(body) {
                     unstash name: 'pylint'
                     unstash name: 'testresult-unittest'
 
-                    sh'''
-                        sonar-scanner
-                    '''
+                    configFileProvider([configFile(fileId: 'sonarqube_configuration', variable: 'SONARQUBE_ENV')]){
+                        sh'''
+                            source ${SONARQUBE_ENV}
+                            echo "Specified Sonar Host from config file: ${SONAR_HOST_URL}"
+                            sonar-scanner -Dsonar.host.url=${SONAR_HOST_URL}
+                        '''
+                    }
                 }
                 post {
                     success {
