@@ -105,7 +105,7 @@ def call(body) {
 							}
 						}
 
-						stage('Static Analysis') {
+						stage('Analysis') {
 							agent { label "build.${agentPythonVersion}" }
 							steps {
 								unstash name: 'Checkout'
@@ -132,7 +132,7 @@ def call(body) {
             		}
 		}
 
-        stage('SonarQube Analysis'){
+        stage('SonarQube'){
                 agent { label "build.sonar-scanner_3-3-0" }
                 steps {
                     unstash name: 'Checkout'
@@ -140,7 +140,6 @@ def call(body) {
                     unstash name: 'testresult-unittest'
 
                     sh'''
-                        echo "Specified Sonar Host from env variable: ${SONAR_HOST_URL}"
                         sonar-scanner -Dsonar.host.url=${SONAR_HOST_URL}
                     '''
                 }
