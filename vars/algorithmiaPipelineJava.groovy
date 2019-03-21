@@ -78,6 +78,7 @@ def call(body) {
                                         methodCoverageTargets: '80, 0, 0',
                                         onlyStable: false,
                                         zoomCoverageChart: false
+                                stash includes: '**/target/surefire-reports/*.xml, **/target/site/cobertura/*.xml', name: 'testresult-unittest'
                             }
                             success {
                                 colourText("info", "Stage: ${env.STAGE_NAME} successful!")
@@ -100,6 +101,8 @@ def call(body) {
                                 recordIssues enabledForFailure: true, tool: checkStyle()
                                 recordIssues enabledForFailure: true, tool: cpd(pattern: '**/target/cpd.xml')
                                 recordIssues enabledForFailure: true, tool: pmdParser(pattern: '**/target/pmd.xml')
+
+                                stash includes: '**/target/*.xml', name: 'static-analysis-reports'
                             }
                             success {
                                 colourText("info", "Stage: ${env.STAGE_NAME} successful!")
@@ -108,6 +111,24 @@ def call(body) {
                                 colourText("warn", "Stage: ${env.STAGE_NAME} failed!")
                             }
                         }
+                    }
+                }
+            }
+
+            stage('SonarQube Analysis') {
+                agent { label "build.${agentMavenVersion}" }
+                steps {
+                    unstash name: 'Checkout'
+                    unstash name: 'testresult-unittest'
+                    unstash name: 'static-analysis-reports'
+
+                    withSonarQubeEnv('SonarQube') {
+                        sh '''
+                            mvn install org.sonarsource.scanner.maven:sonar-maven-plugin:3.6.0.1398:sonar \
+                            -Dsonar.java.pmd.reportPaths=./target/pmd.xml \
+                            -Dsonar.java.checkstyle.reportPaths=./target/checkstyle-result.xml \
+                            -Dsonar.junit.reportPaths=./target/surefire-reports/
+                        '''
                     }
                 }
             }
