@@ -89,7 +89,7 @@ def call(body) {
                         }
                     }
 
-                    stage('Static Analysis') {
+                    stage('Analysis') {
                         agent { label "build.${agentMavenVersion}" }
                         steps {
                             unstash name: 'Checkout'
@@ -115,7 +115,7 @@ def call(body) {
                 }
             }
 
-            stage('SonarQube Analysis') {
+            stage('SonarQube') {
                 agent { label "build.${agentMavenVersion}" }
                 steps {
                     unstash name: 'Checkout'
