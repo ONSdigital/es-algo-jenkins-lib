@@ -139,9 +139,11 @@ def call(body) {
                     unstash name: 'pylint'
                     unstash name: 'testresult-unittest'
 
-                    sh'''
-                        sonar-scanner -Dsonar.host.url=${SONAR_HOST_URL}
-                    '''
+                    withSonarQubeEnv('SonarQube') {
+                        sh'''
+                            sonar-scanner
+                        '''
+                    }
                 }
                 post {
                     success {
