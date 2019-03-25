@@ -78,7 +78,7 @@ def call(body) {
                                         methodCoverageTargets: '80, 0, 0',
                                         onlyStable: false,
                                         zoomCoverageChart: false
-                                stash includes: '**/target/surefire-reports/*.xml, **/target/site/cobertura/*.xml', name: 'testresult-unittest'
+                                stash includes: '**/target/*.exec, **/target/surefire-reports/*.xml, **/target/site/cobertura/*.xml', name: 'testresult-unittest'
                             }
                             success {
                                 colourText("info", "Stage: ${env.STAGE_NAME} successful!")
@@ -93,7 +93,7 @@ def call(body) {
                         agent { label "build.${agentMavenVersion}" }
                         steps {
                             unstash name: 'Checkout'
-                            sh 'mvn checkstyle:checkstyle pmd:pmd pmd:cpd findbugs:findbugs'
+                            sh 'mvn checkstyle:checkstyle pmd:pmd pmd:cpd findbugs:findbugs spotbugs:check'
                         }
                         post {
                             always {
@@ -127,7 +127,9 @@ def call(body) {
                             mvn install org.sonarsource.scanner.maven:sonar-maven-plugin:3.6.0.1398:sonar \
                             -Dsonar.java.pmd.reportPaths=./target/pmd.xml \
                             -Dsonar.java.checkstyle.reportPaths=./target/checkstyle-result.xml \
-                            -Dsonar.junit.reportPaths=./target/surefire-reports/
+                            -Dsonar.jacoco.reportPaths=target/jacoco.exec \
+                            -Dsonar.junit.reportPaths=./target/surefire-reports/ \
+                            -Dsonar.java.spotbugs.reportPaths="./target/spotbugsXml.xml"
                         '''
                     }
                 }
