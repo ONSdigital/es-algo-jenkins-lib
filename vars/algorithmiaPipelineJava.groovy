@@ -127,7 +127,7 @@ def call(body) {
                             mvn install org.sonarsource.scanner.maven:sonar-maven-plugin:3.6.0.1398:sonar \
                             -Dsonar.java.pmd.reportPaths=./target/pmd.xml \
                             -Dsonar.java.checkstyle.reportPaths=./target/checkstyle-result.xml \
-                            -Dsonar.junit.reportPaths=./target/surefire-reports/
+                            -Dsonar.junit.reportPaths=./target/surefire-reports/ \
                             -DskipITs
                         '''
                     }
