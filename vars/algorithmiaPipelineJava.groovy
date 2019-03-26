@@ -129,7 +129,8 @@ def call(body) {
                             -Dsonar.java.checkstyle.reportPaths=./target/checkstyle-result.xml \
                             -Dsonar.jacoco.reportPaths=target/jacoco.exec \
                             -Dsonar.junit.reportPaths=./target/surefire-reports/ \
-                            -Dsonar.java.spotbugs.reportPaths="./target/spotbugsXml.xml"
+                            -Dsonar.java.spotbugs.reportPaths="./target/spotbugsXml.xml" \
+                            -DskipITs
                         '''
                     }
                 }
