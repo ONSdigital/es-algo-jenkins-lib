@@ -128,6 +128,7 @@ def call(body) {
                             -Dsonar.java.pmd.reportPaths=./target/pmd.xml \
                             -Dsonar.java.checkstyle.reportPaths=./target/checkstyle-result.xml \
                             -Dsonar.junit.reportPaths=./target/surefire-reports/
+                            -DskipITs
                         '''
                     }
                 }
